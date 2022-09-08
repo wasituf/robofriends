@@ -7,7 +7,6 @@ import './App.css'
 
 const App = () => {
   const [robotsList, setRobotsList] = useState([])
-  const [filteredList, setFilteredList] = useState([])
   const [searchfield, setSearchfield] = useState('')
 
   useEffect(() => {
@@ -15,25 +14,18 @@ const App = () => {
       .then(response => response.json())
       .then(users => {
         setRobotsList(users)
-        setFilteredList(users)
       })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useEffect(() => {
-    setFilteredList(
-      robotsList.filter(user =>
-        user.name.toLowerCase().includes(searchfield.toLowerCase()),
-      ),
-    )
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchfield])
-
   const onSearchChange = event => {
     setSearchfield(event.target.value)
   }
+
+  const filteredRobots = robotsList.filter(user =>
+    user.name.toLowerCase().includes(searchfield.toLowerCase()),
+  )
 
   return (
     <div className='tc'>
@@ -41,7 +33,7 @@ const App = () => {
       <SearchBox searchfield={searchfield} searchChange={onSearchChange} />
       <Scroll>
         <ErrorBoundary>
-          <CardList robots={filteredList} />
+          <CardList robots={filteredRobots} />
         </ErrorBoundary>
       </Scroll>
     </div>
